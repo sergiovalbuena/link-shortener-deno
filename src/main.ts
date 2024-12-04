@@ -1,30 +1,41 @@
-import { type Route, route, serveDir } from "@std/http";
+import { Router } from "./route.ts";
+const app = new Router();
 
-const routes: Route[] = [
-  {
-    pattern: new URLPattern({ pathname: "/" }),
-    handler: () => new Response("Home page"),
+app.get("/", () => new Response("Hi Mom!"));
+
+app.post("/health-check", () => new Response("It's ALIVE!"));
+
+export default {
+  fetch(req) {
+    return app.handler(req);
   },
-  {
-    pattern: new URLPattern({ pathname: "/users/:id" }),
-    handler: (_req, _info, params) => new Response(params?.pathname.groups.id),
-  },
-  {
-    pattern: new URLPattern({ pathname: "/static/*" }),
-    handler: (req) => serveDir(req),
-  },
-];
+} satisfies Deno.ServeDefaultExport;
 
-function defaultHandler(_req: Request) {
-  return new Response("Not found", { status: 404 });
-}
+// const routes: Route[] = [
+//   {
+//     pattern: new URLPattern({ pathname: "/" }),
+//     handler: () => new Response("Home page"),
+//   },
+//   {
+//     pattern: new URLPattern({ pathname: "/users/:id" }),
+//     handler: (_req, _info, params) => new Response(params?.pathname.groups.id),
+//   },
+//   {
+//     pattern: new URLPattern({ pathname: "/static/*" }),
+//     handler: (req) => serveDir(req),
+//   },
+// ];
 
-const handler = route(routes, defaultHandler);
+// function defaultHandler(_req: Request) {
+//   return new Response("Not found", { status: 404 });
+// }
 
-const fetchHandler = {
-  fetch(req: Request) {
-    return handler(req);
-  },
-};
+// const handler = route(routes, defaultHandler);
 
-export default fetchHandler satisfies Deno.ServeDefaultExport;
+// const fetchHandler = {
+//   fetch(req: Request) {
+//     return handler(req);
+//   },
+// };
+
+// export default fetchHandler satisfies Deno.ServeDefaultExport;
