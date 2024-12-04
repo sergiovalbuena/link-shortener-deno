@@ -1,4 +1,5 @@
 import { Router } from "./route.ts";
+
 const app = new Router();
 
 app.get("/", () => new Response("Hi Mom!"));
